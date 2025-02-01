@@ -18,4 +18,5 @@ Currently up to
 (done)the window close destroying the window in the manager is what up to
 (done)watch events
 open a different program with the window open feature and extract the config for window into an object for each key to be bound to
-	
+getting the gpt func to be blocking
+also make ctrl hold not space

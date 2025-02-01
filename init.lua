@@ -164,7 +164,7 @@ function openChatGPT(command, identifier)
 	return win
 end
 function testWrapper()
-	myManager:openChatGPT("hop")
+	myManager:getWindow("hop")
 end
 function openBraveChatGpt()
 	local brave = hs.application.find("Brave Browser")

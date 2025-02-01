@@ -71,47 +71,56 @@ function Manager:handleTerminal()
 		setToHalfScreen(win, side)
 	end
 end
-
-function Manager:openChatGPT(identifier)
-	--if not manager.windows[chatgpt]
-	if not self.windows[identifier] then
-		hs.printf("self windows identifier is")
-		print(self.windows[identifier])
-		hs.osascript.applescript([[
+function Manager:openChatGPT()
+	hs.osascript.applescript([[
 		tell application "Terminal"
 			activate
 			set newWin to(do script "echo -ne '\\033]0;tomstest\\a' && echo 'hello'")
 			set frontmost to true
 		end tell
 	]])
-		hs.timer.doAfter(1, function()
-			--grab a window object by finding the application and getting the foremost window, should be the window created above
-			local term = hs.application.find("Terminal")
-			local window = term:mainWindow()
+	local window
+	hs.timer.usleep(2000000, function()
+		--grab a window object by finding the application and getting the foremost window, should be the window created above
+		local term = hs.application.find("Terminal")
+		window = term:mainWindow()
+		hs.printf("from the timer func")
+		print(window)
+	end)
+	hs.printf("from the gpt function")
+	print(window)
+	return window
+end
+function Manager:getWindow(identifier)
+	--if not manager.windows[chatgpt]
+	if not self.windows[identifier] then
+		hs.printf("self windows identifier is")
+		print(self.windows[identifier])
+		local window = self.openChatGPT()
+		hs.printf("window after gpt is")
+		print(window)
+		if window then
+			self.windows[identifier] = window
+			hs.printf("self windows identifier after creation is:")
+			print(self.windows[identifier])
+			hs.alert.show("Window found: " .. window:title())
 
-			if window then
-				self.windows[identifier] = window
-				hs.printf("self windows identifier after creation is:")
-				print(self.windows[identifier])
-				hs.alert.show("Window found: " .. window:title())
+			-- Set up a window filter for this specific window
+			local windowFilter = hs.window.filter.new(function(win)
+				return win == window -- Only track this window
+			end)
 
-				-- Set up a window filter for this specific window
-				local windowFilter = hs.window.filter.new(function(win)
-					return win == window -- Only track this window
-				end)
-
-				windowFilter:subscribe(hs.window.filter.windowDestroyed, function(destroyedWindow)
-					if destroyedWindow == window then
-						hs.alert.show("The window has been closed!")
-						self.windows[identifier] = nil
-						hs.printf("self windows identifier after destruction is:")
-						print(self.windows[identifier])
-					end
-				end)
-			else
-				hs.alert.show("No window found for Safari.")
-			end
-		end)
+			windowFilter:subscribe(hs.window.filter.windowDestroyed, function(destroyedWindow)
+				if destroyedWindow == window then
+					hs.alert.show("The window has been closed!")
+					self.windows[identifier] = nil
+					hs.printf("self windows identifier after destruction is:")
+					print(self.windows[identifier])
+				end
+			end)
+		else
+			hs.alert.show("No window found for Safari.")
+		end
 	end
 	return self.windows[identifier]
 end
