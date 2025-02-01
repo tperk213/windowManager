@@ -1,0 +1,20 @@
+user stories
+ 1. keys can be asigend to programs
+ 2. when the key assigend to a program is pressed the program will:
+	if in focus, if windowed
+		go to full screen
+	if in focus, if fullscreened
+		go to windowed
+	if not in focus
+		become focused
+ 3. keys will have a default at start
+ 4. have windows remember their position so when they become windowed/focused the return to there
+ 5. have a key that cycles the window through the list to change the position
+ 6. have a key that cycles all the windows through the list to change all the order
+ 7. have a rotate layout key
+	
+Currently up to 
+press crtl shift s is testing the create window function that will register a window to the manager 
+the window close destroying the window in the manager is what up to
+watch events
+	
