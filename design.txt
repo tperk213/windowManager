@@ -14,7 +14,8 @@ user stories
  7. have a rotate layout key
 	
 Currently up to 
-press crtl shift s is testing the create window function that will register a window to the manager 
-the window close destroying the window in the manager is what up to
-watch events
+(done)press crtl shift s is testing the create window function that will register a window to the manager 
+(done)the window close destroying the window in the manager is what up to
+(done)watch events
+open a different program with the window open feature and extract the config for window into an object for each key to be bound to
 	

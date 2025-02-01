@@ -84,14 +84,34 @@ function Manager:openChatGPT(identifier)
 			set frontmost to true
 		end tell
 	]])
-		local term = hs.application.find("Terminal")
-		local win = term:mainWindow()
-		win:watchForEvents({
-			hs.uielement.watcher.elementDesthroyed,
-		}, function()
-			self.windows[identifier] = nil
+		hs.timer.doAfter(1, function()
+			--grab a window object by finding the application and getting the foremost window, should be the window created above
+			local term = hs.application.find("Terminal")
+			local window = term:mainWindow()
+
+			if window then
+				self.windows[identifier] = window
+				hs.printf("self windows identifier after creation is:")
+				print(self.windows[identifier])
+				hs.alert.show("Window found: " .. window:title())
+
+				-- Set up a window filter for this specific window
+				local windowFilter = hs.window.filter.new(function(win)
+					return win == window -- Only track this window
+				end)
+
+				windowFilter:subscribe(hs.window.filter.windowDestroyed, function(destroyedWindow)
+					if destroyedWindow == window then
+						hs.alert.show("The window has been closed!")
+						self.windows[identifier] = nil
+						hs.printf("self windows identifier after destruction is:")
+						print(self.windows[identifier])
+					end
+				end)
+			else
+				hs.alert.show("No window found for Safari.")
+			end
 		end)
-		self.windows[identifier] = win
 	end
 	return self.windows[identifier]
 end
